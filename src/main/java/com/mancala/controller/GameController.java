@@ -34,8 +34,7 @@ public class GameController {
 
     @GetMapping("/game")
     public GameResponse getCurrentGame() {
-        //not implemented
-        return null;
+        return GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(gameContext);
     }
 
     @PatchMapping("/action")
