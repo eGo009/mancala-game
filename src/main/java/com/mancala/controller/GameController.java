@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mancala.converter.GameEntitiesConverter;
 import com.mancala.manager.GameManager;
 import com.mancala.model.CreateGameRequest;
 import com.mancala.model.GameActionRequest;
@@ -26,8 +27,9 @@ public class GameController {
 
     @PostMapping("/start")
     public GameResponse createGame(@RequestBody CreateGameRequest createGameRequest) {
-        //not implemented
-        return null;
+        gameContext.getPlayer1().setNameIfNotNull(createGameRequest.getPlayer1Name());
+        gameContext.getPlayer2().setNameIfNotNull(createGameRequest.getPlayer2Name());
+        return GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(gameContext);
     }
 
     @GetMapping("/game")

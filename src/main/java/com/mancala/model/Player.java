@@ -16,6 +16,12 @@ public class Player {
         return name;
     }
 
+    public void setNameIfNotNull(String name) {
+        if (name != null) {
+            this.name = name;
+        }
+    }
+
     public int getStartPitNumber() {
         return startPitNumber;
     }
