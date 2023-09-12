@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mancala.converter.GameEntitiesConverter;
-import com.mancala.manager.GameManager;
+import com.mancala.manager.GameProcessor;
 import com.mancala.model.CreateGameRequest;
 import com.mancala.model.GameActionRequest;
 import com.mancala.model.GameContext;
@@ -24,7 +24,7 @@ public class GameController {
     private GameContext gameContext;
 
     @Autowired
-    private GameManager gameManager;
+    private GameProcessor gameProcessor;
 
     @PostMapping("/start")
     public GameResponse createGame(@RequestBody CreateGameRequest createGameRequest) {
@@ -42,7 +42,7 @@ public class GameController {
     public GameResponse makeAction(@RequestBody GameActionRequest gameActionRequest) {
         ValidationResult validationResult = GameValidator.validateSelectedPitNumber(gameContext, gameActionRequest.getSelectedPitNumber());
         if (validationResult.isSuccess()) {
-            gameManager.makeAction(gameContext, gameActionRequest.getSelectedPitNumber());
+            gameProcessor.makeAction(gameContext, gameActionRequest.getSelectedPitNumber());
         }
         return GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(gameContext);
     }

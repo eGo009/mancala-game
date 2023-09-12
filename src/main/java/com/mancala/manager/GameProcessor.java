@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.mancala.model.GameContext;
 
 @Service
-public class GameManager {
+public class GameProcessor {
 
     public void makeAction(GameContext gameContext, int selectedPitNumber) {
         //not implemented
