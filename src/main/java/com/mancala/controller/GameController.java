@@ -15,6 +15,8 @@ import com.mancala.model.CreateGameRequest;
 import com.mancala.model.GameActionRequest;
 import com.mancala.model.GameContext;
 import com.mancala.model.GameResponse;
+import com.mancala.validator.GameValidator;
+import com.mancala.validator.ValidationResult;
 
 @RestController
 public class GameController {
@@ -39,8 +41,11 @@ public class GameController {
 
     @PatchMapping("/action")
     public GameResponse makeAction(@RequestBody GameActionRequest gameActionRequest) {
-        //not implemented
-        return null;
+        ValidationResult validationResult = GameValidator.validateSelectedPitNumber(gameContext, gameActionRequest.getSelectedPitNumber());
+        if (validationResult.isSuccess()) {
+            gameManager.makeAction(gameContext, gameActionRequest.getSelectedPitNumber());
+        }
+        return GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(gameContext);
     }
 
     @DeleteMapping("/reset")
