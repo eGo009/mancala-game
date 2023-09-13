@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mancala.converter.GameEntitiesConverter;
-import com.mancala.manager.GameProcessor;
+import com.mancala.processor.GameProcessor;
 import com.mancala.model.CreateGameRequest;
 import com.mancala.model.GameActionRequest;
 import com.mancala.model.GameContext;

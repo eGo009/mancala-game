@@ -1,4 +1,4 @@
-package com.mancala.manager;
+package com.mancala.processor;
 
 import org.springframework.stereotype.Service;
 

@@ -47,7 +47,7 @@ public class GameEntitiesConverter {
         for (int i = 0; i < gameContext.getPits().length; i++) {
             pits[i] = new Pit(
                     gameContext.getPits()[i],
-                    !gameContext.isEmptyPit(i) && gameContext.getCurrentPlayer().isActivePit(i));
+                    gameContext.getState() != GameState.FINISHED && !gameContext.isEmptyPit(i) && gameContext.getCurrentPlayer().isActivePit(i));
         }
         return pits;
     }

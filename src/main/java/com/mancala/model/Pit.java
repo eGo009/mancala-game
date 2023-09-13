@@ -1,5 +1,7 @@
 package com.mancala.model;
 
+import java.util.Objects;
+
 public class Pit {
 
     private int stonesCount;
@@ -24,5 +26,23 @@ public class Pit {
 
     public void setSelectable(boolean selectable) {
         this.selectable = selectable;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Pit pit = (Pit) o;
+        return stonesCount == pit.stonesCount &&
+                selectable == pit.selectable;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stonesCount, selectable);
     }
 }
