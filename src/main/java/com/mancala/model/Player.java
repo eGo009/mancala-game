@@ -12,6 +12,10 @@ public class Player {
         this.storePitNumber = storePitNumber;
     }
 
+    public boolean isActivePit(int pitNumber) {
+        return pitNumber >= getStartPitNumber() && pitNumber < getStorePitNumber();
+    }
+
     public String getName() {
         return name;
     }
