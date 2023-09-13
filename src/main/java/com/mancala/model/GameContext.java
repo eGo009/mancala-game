@@ -76,6 +76,10 @@ public class GameContext {
         return stonesLeft;
     }
 
+    public boolean isEmptyPit(int pitNumber) {
+        return getPits()[pitNumber] <= 0;
+    }
+
     public Player getPlayer1() {
         return player1;
     }

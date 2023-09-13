@@ -1,11 +1,12 @@
 package com.mancala.validator;
 
 import com.mancala.model.GameContext;
+import com.mancala.model.GameState;
 import com.mancala.model.Player;
 
 public class GameValidator {
     public static ValidationResult validateSelectedPitNumber(GameContext gameContext, int selectedPitNumber) {
-        ValidationResult validationResult = validateEnemyPitOrStorePitSelected(gameContext, selectedPitNumber);
+        ValidationResult validationResult = validateNotPlayerActivePitSelected(gameContext, selectedPitNumber);
         if (!validationResult.isSuccess()) {
             return validationResult;
         }
@@ -13,28 +14,19 @@ public class GameValidator {
     }
 
     private static ValidationResult validateEmptyPitSelected(GameContext gameContext, int selectedPitNumber) {
-        int stonesToMove = gameContext.getPits()[selectedPitNumber];
-        if (stonesToMove <= 0) {
+        if (gameContext.isEmptyPit(selectedPitNumber)) {
             return new ValidationResult(false, String.format("No stones in pit %d, action isn't possible.", selectedPitNumber));
         }
         return new ValidationResult(true, null);
     }
 
-    private static ValidationResult validateEnemyPitOrStorePitSelected(GameContext gameContext, int selectedPitNumber) {
-        boolean success;
-        String errorMessage = null;
-        Player player = null;
-        switch (gameContext.getState()) {
-            case PLAYER1_TURN:
-                player = gameContext.getPlayer1();
-                break;
-            case PLAYER2_TURN:
-                player = gameContext.getPlayer2();
-                break;
-            case FINISHED:
-                return new ValidationResult(false, "Game is finished, action can't be made.");
+    private static ValidationResult validateNotPlayerActivePitSelected(GameContext gameContext, int selectedPitNumber) {
+        if (gameContext.getState() == GameState.FINISHED) {
+            return new ValidationResult(false, "Game is finished, action can't be made.");
         }
-        success = player.getStartPitNumber() <= selectedPitNumber && gameContext.getPlayer1().getStorePitNumber() > selectedPitNumber;
+        String errorMessage = null;
+        Player player = gameContext.getCurrentPlayer();
+        boolean success = player.isActivePit(selectedPitNumber);
         if (!success) {
             errorMessage = String.format("Player %s can't choose pit number %d", player.getName(), selectedPitNumber);
         }

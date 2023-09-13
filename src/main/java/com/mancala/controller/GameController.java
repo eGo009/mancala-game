@@ -44,7 +44,7 @@ public class GameController {
         if (validationResult.isSuccess()) {
             gameProcessor.makeAction(gameContext, gameActionRequest.getSelectedPitNumber());
         }
-        return GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(gameContext);
+        return GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(gameContext, validationResult);
     }
 
     @DeleteMapping("/reset")

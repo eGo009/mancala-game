@@ -9,4 +9,20 @@ public class Pit {
         this.stonesCount = stonesCount;
         this.selectable = selectable;
     }
+
+    public int getStonesCount() {
+        return stonesCount;
+    }
+
+    public void setStonesCount(int stonesCount) {
+        this.stonesCount = stonesCount;
+    }
+
+    public boolean isSelectable() {
+        return selectable;
+    }
+
+    public void setSelectable(boolean selectable) {
+        this.selectable = selectable;
+    }
 }

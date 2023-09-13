@@ -32,13 +32,18 @@ public class GameProcessor {
 
     private void captureStonesIfCan(GameContext gameContext, int lastStonePlacedPitNumber) {
         Player currentPlayer = gameContext.getCurrentPlayer();
-        if (currentPlayer == null || !currentPlayer.isActivePit(lastStonePlacedPitNumber)) {
+        if (currentPlayer == null || !currentPlayer.isActivePit(lastStonePlacedPitNumber) || gameContext.getPits()[lastStonePlacedPitNumber] > 1) {
             return;
         }
         int oppositePitNumber = gameContext.getOppositePitNumber(lastStonePlacedPitNumber);
-        int capturedStones = gameContext.getPits()[oppositePitNumber];
-        gameContext.getPits()[currentPlayer.getStorePitNumber()] += capturedStones;
-        gameContext.getPits()[oppositePitNumber] = 0;
+        captureStones(gameContext, oppositePitNumber, currentPlayer.getStorePitNumber());
+        captureStones(gameContext, lastStonePlacedPitNumber, currentPlayer.getStorePitNumber());
+    }
+
+    private void captureStones(GameContext gameContext, int pitToCaptureFrom, int pitToCaptureTo) {
+        int capturedStones = gameContext.getPits()[pitToCaptureFrom];
+        gameContext.getPits()[pitToCaptureTo] += capturedStones;
+        gameContext.getPits()[pitToCaptureFrom] = 0;
     }
 
     private boolean finishGameIfNeeded(GameContext gameContext) {
