@@ -6,9 +6,13 @@ import org.springframework.lang.Nullable;
 
 import com.mancala.GameConstants;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GameContext {
 
     private Player player1;
@@ -26,6 +30,7 @@ public class GameContext {
         setPlayer1(new Player("Player1", 0, GameConstants.STARTING_TOTAL_PITS_PER_PLAYER - 1));
         setPlayer2(new Player("Player2", GameConstants.STARTING_TOTAL_PITS_PER_PLAYER, GameConstants.STARTING_TOTAL_PITS_PER_PLAYER * 2 - 1));
         setState(GameState.PLAYER1_TURN);
+        setWinnerName(null);
     }
 
     @Nullable

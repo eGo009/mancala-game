@@ -5,6 +5,7 @@ import com.mancala.model.GameState;
 import com.mancala.model.Player;
 
 public class GameValidator {
+
     public static ValidationResult validateSelectedPitNumber(GameContext gameContext, int selectedPitNumber) {
         ValidationResult validationResult = validateNotPlayerActivePitSelected(gameContext, selectedPitNumber);
         if (!validationResult.isSuccess()) {

@@ -1,10 +1,13 @@
 package com.mancala.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,8 +40,8 @@ public class GameControllerTest {
     public void createGameShouldReturnGameResponseWithDefinedPlayerNamesFromRequest() {
         prepareGameContextStub();
         GameResponse gameResponse = gameController.createGame(new CreateGameRequest("newName1", "newName2"));
-        Assert.assertEquals("newName1", gameResponse.getPlayer1Name());
-        Assert.assertEquals("newName2", gameResponse.getPlayer2Name());
+        assertEquals("newName1", gameResponse.getPlayer1Name());
+        assertEquals("newName2", gameResponse.getPlayer2Name());
         resetTestData();
     }
 
@@ -46,24 +49,24 @@ public class GameControllerTest {
     public void createGameShouldReturnGameResponseWithDefaultPlayerNamesWhenNamesFromRequestAreEmpty() {
         prepareGameContextStub();
         GameResponse gameResponse = gameController.createGame(new CreateGameRequest(null, null));
-        Assert.assertEquals("test1", gameResponse.getPlayer1Name());
-        Assert.assertEquals("test2", gameResponse.getPlayer2Name());
+        assertEquals("test1", gameResponse.getPlayer1Name());
+        assertEquals("test2", gameResponse.getPlayer2Name());
     }
 
     @Test
     public void getCurrentGameShouldReturnGameResponseWithGameContextData() {
         prepareGameContextStub();
         GameResponse gameResponse = gameController.getCurrentGame();
-        Assert.assertEquals("test1", gameResponse.getPlayer1Name());
-        Assert.assertEquals("test2", gameResponse.getPlayer2Name());
+        assertEquals("test1", gameResponse.getPlayer1Name());
+        assertEquals("test2", gameResponse.getPlayer2Name());
     }
 
     @Test
     public void makeActionShouldReturnErrorResponseAndNotInvokeGameProcessorWhenValidationFailed() {
         doReturn(PLAYER1_STUB).when(gameContext).getCurrentPlayer();
         GameResponse gameResponse = gameController.makeAction(new GameActionRequest(9));
-        Assert.assertFalse(gameResponse.isSuccess());
-        Assert.assertNotNull(gameResponse.getStatusMessage());
+        assertFalse(gameResponse.isSuccess());
+        assertNotNull(gameResponse.getStatusMessage());
         verify(gameProcessor, never()).makeAction(gameContext, 9);
     }
 
@@ -71,10 +74,10 @@ public class GameControllerTest {
     public void makeActionShouldReturnSuccessResponseAndInvokeGameProcessorWhenValidationPassed() {
         prepareGameContextStub();
         GameResponse gameResponse = gameController.makeAction(new GameActionRequest(1));
-        Assert.assertTrue(gameResponse.isSuccess());
-        Assert.assertNotNull(gameResponse.getStatusMessage());
-        Assert.assertEquals("test1", gameResponse.getPlayer1Name());
-        Assert.assertEquals("test2", gameResponse.getPlayer2Name());
+        assertTrue(gameResponse.isSuccess());
+        assertNotNull(gameResponse.getStatusMessage());
+        assertEquals("test1", gameResponse.getPlayer1Name());
+        assertEquals("test2", gameResponse.getPlayer2Name());
         verify(gameProcessor).makeAction(gameContext, 1);
     }
 
@@ -82,8 +85,8 @@ public class GameControllerTest {
     public void resetGameShouldSetDefaultGameContextAndReturnGameInfo() {
         prepareGameContextStub();
         GameResponse gameResponse = gameController.resetGame();
-        Assert.assertEquals("test1", gameResponse.getPlayer1Name());
-        Assert.assertEquals("test2", gameResponse.getPlayer2Name());
+        assertEquals("test1", gameResponse.getPlayer1Name());
+        assertEquals("test2", gameResponse.getPlayer2Name());
         verify(gameContext).setDefaultGameContext();
     }
 
