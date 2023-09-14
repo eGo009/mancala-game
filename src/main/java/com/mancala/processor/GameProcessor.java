@@ -10,6 +10,9 @@ import com.mancala.model.Player;
 public class GameProcessor {
 
     public void makeAction(GameContext gameContext, int selectedPitNumber) {
+        if (gameContext.getCurrentPlayer() == null) {
+            return;
+        }
         int stonesToMove = gameContext.getPits()[selectedPitNumber];
         gameContext.getPits()[selectedPitNumber] = 0;
         int pitToPlaceStone = selectedPitNumber;
@@ -32,7 +35,7 @@ public class GameProcessor {
 
     private void captureStonesIfCan(GameContext gameContext, int lastStonePlacedPitNumber) {
         Player currentPlayer = gameContext.getCurrentPlayer();
-        if (currentPlayer == null || !currentPlayer.isActivePit(lastStonePlacedPitNumber) || gameContext.getPits()[lastStonePlacedPitNumber] > 1) {
+        if (!currentPlayer.isActivePit(lastStonePlacedPitNumber) || gameContext.getPits()[lastStonePlacedPitNumber] > 1) {
             return;
         }
         int oppositePitNumber = gameContext.getOppositePitNumber(lastStonePlacedPitNumber);
@@ -51,10 +54,11 @@ public class GameProcessor {
         int stonesLeftInPlayer2ActivePits = gameContext.calculateStonesLeftInActivePitsForPlayer(gameContext.getPlayer2());
         boolean finished = false;
         if (stonesLeftInPlayer1ActivePits == 0) {
-            gameContext.getPits()[gameContext.getPlayer2().getStorePitNumber()] = stonesLeftInPlayer2ActivePits;
+            gameContext.getPits()[gameContext.getPlayer2().getStorePitNumber()] += stonesLeftInPlayer2ActivePits;
             finished = true;
         } else if (stonesLeftInPlayer2ActivePits == 0) {
-            gameContext.getPits()[gameContext.getPlayer2().getStorePitNumber()] = stonesLeftInPlayer1ActivePits;
+            gameContext.getPits()[gameContext.getPlayer1().getStorePitNumber()] += stonesLeftInPlayer1ActivePits;
+            finished = true;
         }
         if (finished) {
             gameContext.setState(GameState.FINISHED);
@@ -75,7 +79,7 @@ public class GameProcessor {
 
     private void switchTurnIfNeeded(GameContext gameContext, int lastStonePlacedPitNumber) {
         Player currentPlayer = gameContext.getCurrentPlayer();
-        if (currentPlayer == null || currentPlayer.getStorePitNumber() == lastStonePlacedPitNumber) {
+        if (currentPlayer.getStorePitNumber() == lastStonePlacedPitNumber) {
             return;
         }
         switchTurn(gameContext);
