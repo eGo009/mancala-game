@@ -1,36 +1,23 @@
 package com.mancala.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class Player {
 
     private String name;
     private int startPitNumber;
     private int storePitNumber;
 
-    public Player(String name, int startPitNumber, int storePitNumber) {
-        this.name = name;
-        this.startPitNumber = startPitNumber;
-        this.storePitNumber = storePitNumber;
-    }
-
     public boolean isActivePit(int pitNumber) {
         return pitNumber >= getStartPitNumber() && pitNumber < getStorePitNumber();
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setNameIfNotNull(String name) {
         if (name != null) {
             this.name = name;
         }
-    }
-
-    public int getStartPitNumber() {
-        return startPitNumber;
-    }
-
-    public int getStorePitNumber() {
-        return storePitNumber;
     }
 }

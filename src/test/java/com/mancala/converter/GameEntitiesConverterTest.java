@@ -11,7 +11,6 @@ import com.mancala.validator.ValidationResult;
 
 public class GameEntitiesConverterTest {
 
-
     @Test
     public void convertInternalGameStructureIntoGameResponseShouldReturnErrorGameResponseForFailedValidationResult() {
         GameResponse gameResponse = GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(prepareGameContext(), prepareFailedValidationResult());

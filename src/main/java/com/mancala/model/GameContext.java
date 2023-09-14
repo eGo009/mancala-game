@@ -6,6 +6,9 @@ import org.springframework.lang.Nullable;
 
 import com.mancala.GameConstants;
 
+import lombok.Data;
+
+@Data
 public class GameContext {
 
     private Player player1;
@@ -78,46 +81,5 @@ public class GameContext {
 
     public boolean isEmptyPit(int pitNumber) {
         return getPits()[pitNumber] <= 0;
-    }
-
-    public Player getPlayer1() {
-        return player1;
-    }
-
-    public void setPlayer1(Player player1) {
-        this.player1 = player1;
-    }
-
-    public Player getPlayer2() {
-        return player2;
-    }
-
-    public void setPlayer2(Player player2) {
-        this.player2 = player2;
-    }
-
-    public GameState getState() {
-        return state;
-    }
-
-    public void setState(GameState state) {
-        this.state = state;
-    }
-
-    public int[] getPits() {
-        return pits;
-    }
-
-    public void setPits(int[] pits) {
-        this.pits = pits;
-    }
-
-    @Nullable
-    public String getWinnerName() {
-        return winnerName;
-    }
-
-    public void setWinnerName(String winnerName) {
-        this.winnerName = winnerName;
     }
 }
