@@ -11,6 +11,7 @@ import com.mancala.validator.ValidationResult;
 
 public class GameEntitiesConverter {
 
+
     public static GameResponse convertInternalGameStructureIntoGameResponse(GameContext gameContext, @Nullable ValidationResult validationResult) {
         if (validationResult == null || validationResult.isSuccess()) {
             return prepareSuccessGameResponse(gameContext);

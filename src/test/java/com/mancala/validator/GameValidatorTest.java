@@ -18,7 +18,7 @@ public class GameValidatorTest {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.setState(GameState.FINISHED);
         ValidationResult validationResult = GameValidator.validateSelectedPitNumber(gameContext, 0);
-        assertEquals("Game is finished, action can't be made.", validationResult.getErrorMessage());
+        assertEquals("Game is finished, the action can't be made.", validationResult.getErrorMessage());
         assertFalse(validationResult.isSuccess());
     }
 
@@ -26,7 +26,7 @@ public class GameValidatorTest {
     public void validateSelectedPitNumberShouldReturnErrorWhenSelectedPitNumberIsNotAvailableForPlayer() {
         GameContext gameContext = prepareDefaultGameContext();
         ValidationResult validationResult = GameValidator.validateSelectedPitNumber(gameContext, 10);
-        assertEquals("Player Player1 can't choose pit number 10", validationResult.getErrorMessage());
+        assertEquals("Player Player1 can't choose a pit number 10", validationResult.getErrorMessage());
         assertFalse(validationResult.isSuccess());
     }
 
@@ -35,7 +35,7 @@ public class GameValidatorTest {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.getPits()[1] = 0;
         ValidationResult validationResult = GameValidator.validateSelectedPitNumber(gameContext, 1);
-        assertEquals("No stones in pit 1, action isn't possible.", validationResult.getErrorMessage());
+        assertEquals("No stones in pit 1, the action isn't possible.", validationResult.getErrorMessage());
         assertFalse(validationResult.isSuccess());
     }
 
