@@ -11,6 +11,13 @@ public class Player {
     private int startPitNumber;
     private int storePitNumber;
 
+
+    /**
+     * Check if the pitNumber belongs to given player's and it's not a store pit.
+     *
+     * @param pitNumber pit number to be checked
+     * @return true if the pitNumber belongs to given player's and it's not a store pit.
+     */
     public boolean isActivePit(int pitNumber) {
         return pitNumber >= getStartPitNumber() && pitNumber < getStorePitNumber();
     }

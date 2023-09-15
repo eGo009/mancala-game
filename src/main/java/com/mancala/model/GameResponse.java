@@ -15,6 +15,8 @@ public class GameResponse {
     private String player2Name;
 
     private boolean success;
+
+    //a message to be shown to the players
     private String statusMessage;
 
     @Nullable

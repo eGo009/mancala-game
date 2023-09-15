@@ -6,6 +6,18 @@ import com.mancala.model.Player;
 
 public class GameValidator {
 
+    /**
+     * Validate selectedPitNumber with the rules:
+     * <ul>
+     *     <li>1. Selected pit should belong to the current player and shouldn't be a store pit.</li>
+     *     <li>2. Selected pit shouldn't be empty.</li>
+     * </ul>
+     *
+     * @param gameContext       given game structure
+     * @param selectedPitNumber selected pit number to be validated
+     * @return error validation result (success = false, errorMessage is defined) if validation rules aren't matched, otherwise - success validation result (success = true,
+     * errorMessage is null).
+     */
     public static ValidationResult validateSelectedPitNumber(GameContext gameContext, int selectedPitNumber) {
         ValidationResult validationResult = validateNotPlayerActivePitSelected(gameContext, selectedPitNumber);
         if (!validationResult.isSuccess()) {

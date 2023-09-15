@@ -9,6 +9,19 @@ import com.mancala.model.Player;
 @Service
 public class GameProcessor {
 
+    /**
+     * Method modifies the given game structure with the steps:
+     * <ul>
+     *     <li>1. Take stones from selected pit.</li>
+     *     <li>2. Put stones one by one to the next pits(counterclockwise) except enemy store pit until stones are over.</li>
+     *     <li>3. If the last placed stone goes to the empty pit - capture it and all the stones from opposite pit. Captured stones go the the player's store pit.</li>
+     *     <li>4. If at least one player has ran out of stones - move game to finished state and capture all the left stones to the other player store pit.</li>
+     *     <li>5. If  the last placed stone goes to the store pit - player get a free action, GameState remains the same. Otherwise - turn is switched to another player.</li>
+     * </ul>
+     *
+     * @param gameContext       current game structure
+     * @param selectedPitNumber pit selected to take stones from
+     */
     public void makeAction(GameContext gameContext, int selectedPitNumber) {
         if (gameContext.getCurrentPlayer() == null) {
             return;
