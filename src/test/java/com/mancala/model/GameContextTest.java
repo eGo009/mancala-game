@@ -3,12 +3,14 @@ package com.mancala.model;
 import static com.mancala.CommonTestUtils.prepareDefaultGameContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
 import org.junit.jupiter.api.Test;
+
+import com.mancala.exception.UnexpectedGameActionException;
 
 public class GameContextTest {
 
@@ -31,12 +33,12 @@ public class GameContextTest {
     }
 
     @Test
-    public void getCurrentPlayerShouldReturnPlayer1ForPlayer1TurnStatus() {
+    public void getCurrentPlayerShouldReturnPlayer1ForPlayer1TurnStatus() throws UnexpectedGameActionException {
         assertEquals(gameContext.getPlayer1(), gameContext.getCurrentPlayer());
     }
 
     @Test
-    public void getCurrentPlayerShouldReturnPlayer2ForPlayer2TurnStatus() {
+    public void getCurrentPlayerShouldReturnPlayer2ForPlayer2TurnStatus() throws UnexpectedGameActionException {
         gameContext.setState(GameState.PLAYER2_TURN);
         assertEquals(gameContext.getPlayer2(), gameContext.getCurrentPlayer());
         gameContext.setState(GameState.PLAYER1_TURN);
@@ -44,53 +46,41 @@ public class GameContextTest {
     }
 
     @Test
-    public void getCurrentPlayerShouldReturnNullForFinishedTurnStatus() {
+    public void getCurrentPlayerShouldThrowExceptionForFinishedTurnStatus() {
         gameContext.setState(GameState.FINISHED);
-        assertNull(gameContext.getCurrentPlayer());
+        assertThrows(UnexpectedGameActionException.class, () -> {gameContext.getCurrentPlayer();});
         gameContext.setState(GameState.PLAYER1_TURN);
     }
 
     @Test
-    public void getOppositePlayerShouldReturnPlayer2ForPlayer1TurnStatus() {
+    public void getOppositePlayerShouldReturnPlayer2ForPlayer1TurnStatus() throws UnexpectedGameActionException {
         assertEquals(gameContext.getPlayer2(), gameContext.getOppositePlayer());
     }
 
     @Test
-    public void getOppositePlayerShouldReturnPlayer1ForPlayer2TurnStatus() {
+    public void getOppositePlayerShouldReturnPlayer1ForPlayer2TurnStatus() throws UnexpectedGameActionException {
         gameContext.setState(GameState.PLAYER2_TURN);
         assertEquals(gameContext.getPlayer1(), gameContext.getOppositePlayer());
         gameContext.setState(GameState.PLAYER1_TURN);
     }
 
     @Test
-    public void getOppositePlayerShouldReturnNullForFinishedTurnStatus() {
+    public void getOppositePlayerShouldThrowExceptionForFinishedTurnStatus() {
         gameContext.setState(GameState.FINISHED);
-        assertNull(gameContext.getOppositePlayer());
+        assertThrows(UnexpectedGameActionException.class, () -> {gameContext.getOppositePlayer();});
         gameContext.setState(GameState.PLAYER1_TURN);
     }
 
     @Test
-    public void isStoneCanBePlacedToPitShouldReturnTrueWhenPitIsNotEnemyStore() {
-        doReturn(7).when(gameContextSpy).getEnemyStorePitNumber();
+    public void isStoneCanBePlacedToPitShouldReturnTrueWhenPitIsNotEnemyStore() throws UnexpectedGameActionException {
+        doReturn(new Player(null, 0, 7)).when(gameContextSpy).getOppositePlayer();
         assertTrue(gameContextSpy.isStoneCanBePlacedToPit(13));
     }
 
     @Test
-    public void isStoneCanBePlacedToPitShouldReturnFalseWhenPitIsEnemyStore() {
-        doReturn(7).when(gameContextSpy).getEnemyStorePitNumber();
+    public void isStoneCanBePlacedToPitShouldReturnFalseWhenPitIsEnemyStore() throws UnexpectedGameActionException {
+        doReturn(new Player(null, 0, 7)).when(gameContextSpy).getOppositePlayer();
         assertFalse(gameContextSpy.isStoneCanBePlacedToPit(7));
-    }
-
-    @Test
-    public void getEnemyStorePitNumberShouldReturnMinus1ForEmptyOppositePlayer() {
-        doReturn(null).when(gameContextSpy).getOppositePlayer();
-        assertEquals(-1, gameContextSpy.getEnemyStorePitNumber());
-    }
-
-    @Test
-    public void getEnemyStorePitNumberShouldReturnOppositePlayerPitNumber() {
-        doReturn(new Player(null, 0, 6)).when(gameContextSpy).getOppositePlayer();
-        assertEquals(6, gameContextSpy.getEnemyStorePitNumber());
     }
 
     @Test

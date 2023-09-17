@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.springframework.lang.Nullable;
 
 import com.mancala.GameConstants;
+import com.mancala.exception.UnexpectedGameActionException;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,27 +34,37 @@ public class GameContext {
         setWinnerName(null);
     }
 
-    @Nullable
-    public Player getCurrentPlayer() {
+    /**
+     * Get a current player based on the game state. Finished game has no current player, so calling the method for this case will result UnexpectedGameActionException
+     *
+     * @return current player
+     * @throws UnexpectedGameActionException if game has no current player to return
+     */
+    public Player getCurrentPlayer() throws UnexpectedGameActionException {
         switch (getState()) {
             case PLAYER1_TURN:
                 return getPlayer1();
             case PLAYER2_TURN:
                 return getPlayer2();
             default:
-                return null;
+                throw new UnexpectedGameActionException(String.format("Can't determine a current user for %s game state", getState().toString()));
         }
     }
 
-    @Nullable
-    public Player getOppositePlayer() {
+    /**
+     * Get an opposite player based on the game state. Finished game has no opposite player, so calling the method for this case will result UnexpectedGameActionException
+     *
+     * @return opposite player
+     * @throws UnexpectedGameActionException if game has no opposite player to return
+     */
+    public Player getOppositePlayer() throws UnexpectedGameActionException {
         switch (getState()) {
             case PLAYER1_TURN:
                 return getPlayer2();
             case PLAYER2_TURN:
                 return getPlayer1();
             default:
-                return null;
+                throw new UnexpectedGameActionException(String.format("Can't determine an opposite user for %s game state", getState().toString()));
         }
     }
 
@@ -63,22 +74,10 @@ public class GameContext {
      * @param pitToPlaceStone pit to be checked
      * @return true if the pit is available for placing a stone
      */
-    public boolean isStoneCanBePlacedToPit(int pitToPlaceStone) {
-        return pitToPlaceStone != getEnemyStorePitNumber();
+    public boolean isStoneCanBePlacedToPit(int pitToPlaceStone) throws UnexpectedGameActionException {
+        return pitToPlaceStone != getOppositePlayer().getStorePitNumber();
     }
 
-    /**
-     * Get store pit number of the opposite player
-     *
-     * @return -1 if opposite player is not found (finished or broken game case), for other cases returns a store pit number of opposite player.
-     */
-    public int getEnemyStorePitNumber() {
-        Player oppositePlayer = getOppositePlayer();
-        if (oppositePlayer != null) {
-            return oppositePlayer.getStorePitNumber();
-        }
-        return -1;
-    }
 
     /**
      * Get a opposite pit number for the selected pit number. Pits o the game fields is arranged in the following order (numbers are the indexes of the pits in the GameContext):

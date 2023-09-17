@@ -1,5 +1,6 @@
 package com.mancala.validator;
 
+import com.mancala.exception.UnexpectedGameActionException;
 import com.mancala.model.GameContext;
 import com.mancala.model.GameState;
 import com.mancala.model.Player;
@@ -18,7 +19,7 @@ public class GameValidator {
      * @return error validation result (success = false, errorMessage is defined) if validation rules aren't matched, otherwise - success validation result (success = true,
      * errorMessage is null).
      */
-    public static ValidationResult validateSelectedPitNumber(GameContext gameContext, int selectedPitNumber) {
+    public static ValidationResult validateSelectedPitNumber(GameContext gameContext, int selectedPitNumber) throws UnexpectedGameActionException {
         ValidationResult validationResult = validateNotPlayerActivePitSelected(gameContext, selectedPitNumber);
         if (!validationResult.isSuccess()) {
             return validationResult;
@@ -33,7 +34,7 @@ public class GameValidator {
         return new ValidationResult(true, null);
     }
 
-    private static ValidationResult validateNotPlayerActivePitSelected(GameContext gameContext, int selectedPitNumber) {
+    private static ValidationResult validateNotPlayerActivePitSelected(GameContext gameContext, int selectedPitNumber) throws UnexpectedGameActionException {
         if (gameContext.getState() == GameState.FINISHED) {
             return new ValidationResult(false, "Game is finished, the action can't be made.");
         }

@@ -2,6 +2,7 @@ package com.mancala.processor;
 
 import org.springframework.stereotype.Service;
 
+import com.mancala.exception.UnexpectedGameActionException;
 import com.mancala.model.GameContext;
 import com.mancala.model.GameState;
 import com.mancala.model.Player;
@@ -22,10 +23,7 @@ public class GameProcessor {
      * @param gameContext       current game structure
      * @param selectedPitNumber pit selected to take stones from
      */
-    public void makeAction(GameContext gameContext, int selectedPitNumber) {
-        if (gameContext.getCurrentPlayer() == null) {
-            return;
-        }
+    public void makeAction(GameContext gameContext, int selectedPitNumber) throws UnexpectedGameActionException {
         int stonesToMove = gameContext.getPits()[selectedPitNumber];
         gameContext.getPits()[selectedPitNumber] = 0;
         int pitToPlaceStone = selectedPitNumber;
@@ -46,7 +44,7 @@ public class GameProcessor {
         }
     }
 
-    private void captureStonesIfCan(GameContext gameContext, int lastStonePlacedPitNumber) {
+    private void captureStonesIfCan(GameContext gameContext, int lastStonePlacedPitNumber) throws UnexpectedGameActionException {
         Player currentPlayer = gameContext.getCurrentPlayer();
         if (!currentPlayer.isActivePit(lastStonePlacedPitNumber) || gameContext.getPits()[lastStonePlacedPitNumber] > 1) {
             return;
@@ -90,7 +88,7 @@ public class GameProcessor {
         }
     }
 
-    private void switchTurnIfNeeded(GameContext gameContext, int lastStonePlacedPitNumber) {
+    private void switchTurnIfNeeded(GameContext gameContext, int lastStonePlacedPitNumber) throws UnexpectedGameActionException {
         Player currentPlayer = gameContext.getCurrentPlayer();
         if (currentPlayer.getStorePitNumber() == lastStonePlacedPitNumber) {
             return;

@@ -8,13 +8,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.mancala.exception.UnexpectedGameActionException;
 import com.mancala.model.GameContext;
 import com.mancala.model.GameState;
 
 public class GameValidatorTest {
 
     @Test
-    public void validateSelectedPitNumberShouldReturnErrorWhenGameIsFinished() {
+    public void validateSelectedPitNumberShouldReturnErrorWhenGameIsFinished() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.setState(GameState.FINISHED);
         ValidationResult validationResult = GameValidator.validateSelectedPitNumber(gameContext, 0);
@@ -23,7 +24,7 @@ public class GameValidatorTest {
     }
 
     @Test
-    public void validateSelectedPitNumberShouldReturnErrorWhenSelectedPitNumberIsNotAvailableForPlayer() {
+    public void validateSelectedPitNumberShouldReturnErrorWhenSelectedPitNumberIsNotAvailableForPlayer() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         ValidationResult validationResult = GameValidator.validateSelectedPitNumber(gameContext, 10);
         assertEquals("Player Player1 can't choose a pit number 10", validationResult.getErrorMessage());
@@ -31,7 +32,7 @@ public class GameValidatorTest {
     }
 
     @Test
-    public void validateSelectedPitNumberShouldReturnErrorWhenSelectedPitIsEmpty() {
+    public void validateSelectedPitNumberShouldReturnErrorWhenSelectedPitIsEmpty() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.getPits()[1] = 0;
         ValidationResult validationResult = GameValidator.validateSelectedPitNumber(gameContext, 1);
@@ -40,7 +41,7 @@ public class GameValidatorTest {
     }
 
     @Test
-    public void validateSelectedPitNumberShouldReturnSuccessAndNoErrorMessageForSuccessCase() {
+    public void validateSelectedPitNumberShouldReturnSuccessAndNoErrorMessageForSuccessCase() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         ValidationResult validationResult = GameValidator.validateSelectedPitNumber(gameContext, 1);
         assertNull(validationResult.getErrorMessage());
