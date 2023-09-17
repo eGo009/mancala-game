@@ -1,5 +1,8 @@
 package com.mancala.controller;
 
+import static com.mancala.converter.GameEntitiesConverter.prepareErrorGameResponse;
+import static com.mancala.converter.GameEntitiesConverter.prepareSuccessGameResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mancala.converter.GameEntitiesConverter;
+import com.mancala.exception.UnexpectedGameActionException;
 import com.mancala.processor.GameProcessor;
 import com.mancala.model.CreateGameRequest;
 import com.mancala.model.GameActionRequest;
@@ -30,27 +33,41 @@ public class GameController {
     public GameResponse createGame(@RequestBody CreateGameRequest createGameRequest) {
         gameContext.getPlayer1().setNameIfNotNull(createGameRequest.getPlayer1Name());
         gameContext.getPlayer2().setNameIfNotNull(createGameRequest.getPlayer2Name());
-        return GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(gameContext);
+        return tryToConvertGameToResponse();
     }
 
     @GetMapping("/game")
     public GameResponse getCurrentGame() {
-        return GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(gameContext);
+        return tryToConvertGameToResponse();
     }
 
     @PatchMapping("/action")
     public GameResponse makeAction(@RequestBody GameActionRequest gameActionRequest) {
-        ValidationResult validationResult = GameValidator.validateSelectedPitNumber(gameContext, gameActionRequest.getSelectedPitNumber());
-        if (validationResult.isSuccess()) {
-            gameProcessor.makeAction(gameContext, gameActionRequest.getSelectedPitNumber());
+        ValidationResult validationResult;
+        try {
+            validationResult = GameValidator.validateSelectedPitNumber(gameContext, gameActionRequest.getSelectedPitNumber());
+            if (validationResult.isSuccess()) {
+                gameProcessor.makeAction(gameContext, gameActionRequest.getSelectedPitNumber());
+                return prepareSuccessGameResponse(gameContext);
+            }
+        } catch (UnexpectedGameActionException e) {
+            validationResult = new ValidationResult(false, e.getMessage());
         }
-        return GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(gameContext, validationResult);
+        return prepareErrorGameResponse(validationResult);
     }
 
     @DeleteMapping("/reset")
     public GameResponse resetGame() {
         gameContext.setDefaultGameContext();
-        return GameEntitiesConverter.convertInternalGameStructureIntoGameResponse(gameContext);
+        return tryToConvertGameToResponse();
+    }
+
+    private GameResponse tryToConvertGameToResponse() {
+        try {
+            return prepareSuccessGameResponse(gameContext);
+        } catch (UnexpectedGameActionException e) {
+            return prepareErrorGameResponse(new ValidationResult(false, e.getMessage()));
+        }
     }
 
 }

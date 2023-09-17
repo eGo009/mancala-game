@@ -3,6 +3,7 @@ package com.mancala.converter;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
+import com.mancala.exception.UnexpectedGameActionException;
 import com.mancala.model.GameContext;
 import com.mancala.model.GameResponse;
 import com.mancala.model.GameState;
@@ -11,19 +12,7 @@ import com.mancala.validator.ValidationResult;
 
 public class GameEntitiesConverter {
 
-
-    public static GameResponse convertInternalGameStructureIntoGameResponse(GameContext gameContext, @Nullable ValidationResult validationResult) {
-        if (validationResult == null || validationResult.isSuccess()) {
-            return prepareSuccessGameResponse(gameContext);
-        }
-        return prepareErrorGameResponse(validationResult);
-    }
-
-    public static GameResponse convertInternalGameStructureIntoGameResponse(GameContext gameContext) {
-        return convertInternalGameStructureIntoGameResponse(gameContext, null);
-    }
-
-    private static GameResponse prepareSuccessGameResponse(GameContext gameContext) {
+    public static GameResponse prepareSuccessGameResponse(GameContext gameContext) throws UnexpectedGameActionException {
         return new GameResponse(
                 gameContext.getPlayer1().getName(),
                 gameContext.getPlayer2().getName(),
@@ -33,7 +22,7 @@ public class GameEntitiesConverter {
         );
     }
 
-    private static GameResponse prepareErrorGameResponse(ValidationResult validationResult) {
+    public static GameResponse prepareErrorGameResponse(ValidationResult validationResult) {
         return new GameResponse(
                 null,
                 null,
@@ -43,7 +32,7 @@ public class GameEntitiesConverter {
         );
     }
 
-    private static Pit[] preparePitsInfo(GameContext gameContext) {
+    private static Pit[] preparePitsInfo(GameContext gameContext) throws UnexpectedGameActionException {
         Pit[] pits = new Pit[gameContext.getPits().length];
         for (int i = 0; i < gameContext.getPits().length; i++) {
             pits[i] = new Pit(
@@ -53,7 +42,7 @@ public class GameEntitiesConverter {
         return pits;
     }
 
-    private static String createStatusMessage(GameContext gameContext) {
+    private static String createStatusMessage(GameContext gameContext) throws UnexpectedGameActionException {
         if (gameContext.getState() == GameState.FINISHED) {
             return StringUtils.isEmpty(gameContext.getWinnerName()) ? "Draw" : String.format("%s is winner", gameContext.getWinnerName());
         }

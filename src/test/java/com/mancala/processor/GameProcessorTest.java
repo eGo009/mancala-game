@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.jupiter.api.Test;
 
+import com.mancala.exception.UnexpectedGameActionException;
 import com.mancala.model.GameContext;
 import com.mancala.model.GameState;
 
@@ -15,7 +16,7 @@ public class GameProcessorTest {
     private GameProcessor gameProcessor = new GameProcessor();
 
     @Test
-    public void makeActionShouldTakeStonesFromSelectedPitAndPlaceThemToNextPits() {
+    public void makeActionShouldTakeStonesFromSelectedPitAndPlaceThemToNextPits() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameProcessor.makeAction(gameContext, 1);
         assertEquals(0, gameContext.getPits()[1]);
@@ -35,7 +36,7 @@ public class GameProcessorTest {
     }
 
     @Test
-    public void makeActionShouldSkipEnemyPitWhenPlacingStones() {
+    public void makeActionShouldSkipEnemyPitWhenPlacingStones() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.getPits()[5] = 8;
         gameProcessor.makeAction(gameContext, 5);
@@ -56,21 +57,21 @@ public class GameProcessorTest {
     }
 
     @Test
-    public void makeActionShouldSwitchTurnToAnotherPlayer() {
+    public void makeActionShouldSwitchTurnToAnotherPlayer() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameProcessor.makeAction(gameContext, 2);
         assertEquals(GameState.PLAYER2_TURN, gameContext.getState());
     }
 
     @Test
-    public void makeActionShouldNotSwitchTurnToAnotherPlayerWhenLastStonePlacedIntoPlayerStore() {
+    public void makeActionShouldNotSwitchTurnToAnotherPlayerWhenLastStonePlacedIntoPlayerStore() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameProcessor.makeAction(gameContext, 0);
         assertEquals(GameState.PLAYER1_TURN, gameContext.getState());
     }
 
     @Test
-    public void makeActionShouldSwitchGameToFinishedWhenNoStonesLeftInActivePitsOfPlayer1() {
+    public void makeActionShouldSwitchGameToFinishedWhenNoStonesLeftInActivePitsOfPlayer1() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.getPits()[0] = 0;
         gameContext.getPits()[1] = 0;
@@ -83,7 +84,7 @@ public class GameProcessorTest {
     }
 
     @Test
-    public void makeActionShouldSwitchGameToFinishedWhenNoStonesLeftInActivePitsOfPlayer2() {
+    public void makeActionShouldSwitchGameToFinishedWhenNoStonesLeftInActivePitsOfPlayer2() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.setState(GameState.PLAYER2_TURN);
         gameContext.getPits()[7] = 0;
@@ -97,7 +98,7 @@ public class GameProcessorTest {
     }
 
     @Test
-    public void makeActionShouldSetPlayer1AsWinnerWhenPlayer1StoreContainsMoreStonesAndGameGoingFinished() {
+    public void makeActionShouldSetPlayer1AsWinnerWhenPlayer1StoreContainsMoreStonesAndGameGoingFinished() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.setState(GameState.PLAYER2_TURN);
         gameContext.getPits()[0] = 0;
@@ -119,7 +120,7 @@ public class GameProcessorTest {
     }
 
     @Test
-    public void makeActionShouldSetPlayer2AsWinnerWhenPlayer2StoreContainsMoreStonesAndGameGoingFinished() {
+    public void makeActionShouldSetPlayer2AsWinnerWhenPlayer2StoreContainsMoreStonesAndGameGoingFinished() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.setState(GameState.PLAYER2_TURN);
         gameContext.getPits()[0] = 0;
@@ -141,7 +142,7 @@ public class GameProcessorTest {
     }
 
     @Test
-    public void makeActionShouldSetNoWinnersWhenPlayersHasSameStonesCountInStoreAndGameGoingFinished() {
+    public void makeActionShouldSetNoWinnersWhenPlayersHasSameStonesCountInStoreAndGameGoingFinished() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.setState(GameState.PLAYER2_TURN);
         gameContext.getPits()[0] = 0;
@@ -163,7 +164,7 @@ public class GameProcessorTest {
     }
 
     @Test
-    public void makeActionShouldCollectAllLeftStonesOfPlayer1ToStoreWhenPlayer2HasNoStonesLeftInActivePits() {
+    public void makeActionShouldCollectAllLeftStonesOfPlayer1ToStoreWhenPlayer2HasNoStonesLeftInActivePits() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.setState(GameState.PLAYER2_TURN);
         gameContext.getPits()[0] = 6;
@@ -185,7 +186,7 @@ public class GameProcessorTest {
     }
 
     @Test
-    public void makeActionShouldCollectAllLeftStonesOfPlayer2ToStoreWhenPlayer1HasNoStonesLeftInActivePits() {
+    public void makeActionShouldCollectAllLeftStonesOfPlayer2ToStoreWhenPlayer1HasNoStonesLeftInActivePits() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.getPits()[0] = 0;
         gameContext.getPits()[1] = 0;
@@ -206,17 +207,7 @@ public class GameProcessorTest {
     }
 
     @Test
-    public void makeActionShouldNotChangeGameContextWhenGameIsFinished() {
-        GameContext gameContext = prepareDefaultGameContext();
-        gameContext.setState(GameState.FINISHED);
-        GameContext expectedGameContext = prepareDefaultGameContext();
-        expectedGameContext.setState(GameState.FINISHED);
-        gameProcessor.makeAction(gameContext, 5);
-        assertEquals(expectedGameContext, gameContext);
-    }
-
-    @Test
-    public void makeActionShouldCaptureStoneFromOwnAndOppositePitWhenLastStonePlacedIntoEmptyPit() {
+    public void makeActionShouldCaptureStoneFromOwnAndOppositePitWhenLastStonePlacedIntoEmptyPit() throws UnexpectedGameActionException {
         GameContext gameContext = prepareDefaultGameContext();
         gameContext.getPits()[0] = 1;
         gameContext.getPits()[1] = 0;
